@@ -1,0 +1,117 @@
+<Window x:Class="AltAccounts.App.Popup.PopupWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Switch account" Width="440" SizeToContent="Height"
+        WindowStyle="None" ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True"
+        Background="{DynamicResource PopupBackground}" Foreground="{DynamicResource PopupText}"
+        FontFamily="Segoe UI Variable Text, Segoe UI" FontSize="13"
+        PreviewKeyDown="Window_PreviewKeyDown" Deactivated="Window_Deactivated">
+    <Border x:Name="RootBorder" Background="{DynamicResource PopupBackground}" ClipToBounds="True">
+        <DockPanel>
+            <!-- Custom title bar: title, minimize, close. No native Windows title bar. -->
+            <Grid DockPanel.Dock="Top" Height="38" Background="{DynamicResource PopupTitleBar}" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="14,0,0,0">
+                    <Image Source="pack://application:,,,/Assets/AltAccounts.ico" Width="16" Height="16" Margin="0,0,8,0" />
+                    <TextBlock Text="Switch account" FontWeight="SemiBold" VerticalAlignment="Center" />
+                </StackPanel>
+                <Button Grid.Column="1" Style="{StaticResource TitleBarButton}" Content="&#xE921;" ToolTip="Minimize" Click="Minimize_Click" />
+                <Button Grid.Column="2" Style="{StaticResource TitleBarButton}" Content="&#xE8BB;" ToolTip="Close (Esc)" Click="Close_Click" Margin="0,0,2,0" />
+            </Grid>
+
+            <!-- Footer -->
+            <Grid DockPanel.Dock="Bottom" Margin="12,6,12,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="FooterHint" Foreground="{DynamicResource PopupSubText}" FontSize="11" VerticalAlignment="Center" TextWrapping="Wrap"
+                           Text="↑↓ move · Enter or 1–9 switch · Esc close" />
+                <Button x:Name="SharedButton" Grid.Column="1" Style="{StaticResource PopupGhostButtonStyle}" Content="Shared folders" Margin="8,0,0,0" Click="Shared_Click" />
+                <Button Grid.Column="2" Style="{StaticResource PopupGhostButtonStyle}" Content="Settings" Margin="8,0,0,0" Click="Settings_Click" />
+            </Grid>
+
+            <!-- First-switch explanation (shown once) -->
+            <Border x:Name="HintPanel" DockPanel.Dock="Bottom" Visibility="Collapsed" Margin="12,6,12,0" Padding="12" CornerRadius="8" Background="#26FFFFFF">
+                <StackPanel>
+                    <TextBlock TextWrapping="Wrap" Text="Switch locks this PC. On the sign-in screen, pick the account and type its password or PIN. Your apps keep running in the background." />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                        <Button Style="{StaticResource PopupGhostButtonStyle}" Content="Cancel" Click="HintCancel_Click" Margin="0,0,8,0" />
+                        <Button Style="{StaticResource PopupTextButton}" Content="OK, switch" Click="HintOk_Click" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <StackPanel>
+                <TextBlock x:Name="EmptyText" Visibility="Collapsed" Margin="16,18,16,8" TextWrapping="Wrap"
+                           Text="There are no other accounts on this PC yet. An admin can add one in Settings." />
+                <ListBox x:Name="AccountList" Background="Transparent" BorderThickness="0" Margin="6,8,6,0"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled" MaxHeight="440"
+                         KeyboardNavigation.DirectionalNavigation="Cycle" MouseDoubleClick="AccountList_MouseDoubleClick">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Foreground" Value="{DynamicResource PopupText}" />
+                            <Setter Property="Margin" Value="0,2" />
+                            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border x:Name="Bd" Background="Transparent" CornerRadius="8" Padding="10,8">
+                                            <ContentPresenter />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource PopupRowHover}" />
+                                            </Trigger>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource PopupRowSelected}" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="22" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding Number}" Foreground="{DynamicResource PopupSubText}" VerticalAlignment="Center" FontSize="12" />
+                                <Grid Grid.Column="1" Width="40" Height="40" Margin="0,0,12,0">
+                                    <Ellipse Fill="{Binding Accent}" />
+                                    <TextBlock Text="{Binding Initials}" Foreground="White" FontWeight="SemiBold" FontSize="15"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    <Ellipse Visibility="{Binding PictureVisibility}">
+                                        <Ellipse.Fill>
+                                            <ImageBrush ImageSource="{Binding Picture}" Stretch="UniformToFill" />
+                                        </Ellipse.Fill>
+                                    </Ellipse>
+                                </Grid>
+                                <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="14" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Text="{Binding Details}" Foreground="{DynamicResource PopupSubText}" FontSize="12" TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Button Style="{StaticResource PopupGhostButtonStyle}" Content="Sign-in screen" Margin="0,0,6,0"
+                                            Visibility="{Binding ProVisibility}" Click="Direct_Click"
+                                            ToolTip="Pro: shows the sign-in screen without locking first. The password is still required." />
+                                    <Button Style="{StaticResource PopupTextButton}" Content="Switch" Click="Switch_Click" />
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </StackPanel>
+        </DockPanel>
+    </Border>
+</Window>
