@@ -4,7 +4,7 @@ These are the choices made while building the spec ("Build spec: Alt Account Swi
 
 ## Choices
 
-1. **.NET 10 (LTS) instead of .NET 8.** Support for .NET 8 ends on 10 Nov 2026, and the build PC has only the .NET 10 SDK. Target `net10.0-windows`, `win-x64`, self-contained single file (about 72 MB).
+1. **.NET 10 (LTS) instead of .NET 8.** Support for .NET 8 ends on 10 Nov 2026, and the build PC has only the .NET 10 SDK. Target `net10.0-windows`, `win-x64`, self-contained single file (about 166 MB). Since 1.0.1 it is not compressed: compression unpacked the assemblies into memory and doubled RAM use. The installer compresses the download instead.
 2. **One exe for everything.** The elevated helper is the same `AltAccounts.exe`, started with `--elevated <request> <result>` and the `runas` verb. Each admin action shows UAC. Cancelling UAC means the helper never starts, so nothing changes.
 3. **Passwords never cross a process boundary.** The spec suggested `New-LocalUser`. Passing a password to PowerShell means putting it on a command line or in a pipe, so instead the *Add account* dialog runs **inside** the elevated helper. It calls `System.DirectoryServices.AccountManagement` (documented) and clears the box afterwards. Requests between the normal app and the helper never contain a password.
 4. **Groups are found by SID** (`S-1-5-32-544` Administrators, `S-1-5-32-545` Users), not by name. Group names change with the Windows language (Czech: "Administrátoři").

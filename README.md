@@ -14,7 +14,7 @@ It works on Windows 10 and 11, Home and Pro. It never stores, shows or bypasses 
 winget install OpiKula2877.AltWin
 ```
 
-**Or manually:** download `AltWin-Setup-1.0.0.exe` from [Releases](https://github.com/OpiKula2877/AltWin/releases/latest) and run it.
+**Or manually:** download `AltWin-Setup-1.0.1.exe` from [Releases](https://github.com/OpiKula2877/AltWin/releases/latest) and run it.
 
 After installing, AltWin starts automatically in every account on the PC. Tap **Left Alt** to open the popup, and open **Settings** from the popup or the tray icon.
 To uninstall, go to **Settings > Apps > Installed apps > Alt Account Switcher**.

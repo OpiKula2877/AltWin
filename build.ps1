@@ -5,7 +5,7 @@
 .EXAMPLE
   ./build.ps1                      # test + publish artifacts\publish\AltAccounts.exe
   ./build.ps1 -Installer           # also artifacts\AltWin-Setup-<version>.exe (needs Inno Setup 6)
-  ./build.ps1 -Installer -InstallerUrl https://github.com/OpiKula2877/AltWin/releases/download/v1.0.0/AltWin-Setup-1.0.0.exe
+  ./build.ps1 -Installer -InstallerUrl https://github.com/OpiKula2877/AltWin/releases/download/v1.0.1/AltWin-Setup-1.0.1.exe
 #>
 param(
     [switch]$SkipTests,

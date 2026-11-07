@@ -22,7 +22,7 @@ It works on Windows 11 **Home** and **Pro** and finds out the edition when it ru
 
 ```powershell
 ./build.ps1              # runs the tests, then publishes artifacts\publish\AltAccounts.exe (one self-contained file)
-./build.ps1 -Installer   # also builds artifacts\AltWin-Setup-1.0.0.exe and fills in the winget manifest hash
+./build.ps1 -Installer   # also builds artifacts\AltWin-Setup-1.0.1.exe and fills in the winget manifest hash
 ```
 
 To publish by hand:
@@ -33,7 +33,7 @@ dotnet publish src\AltAccounts.App -c Release -r win-x64 --self-contained -p:Pub
 
 ### Install
 
-**With the installer (recommended).** Run `artifacts\AltWin-Setup-1.0.0.exe` as an admin. It:
+**With the installer (recommended).** Run `artifacts\AltWin-Setup-1.0.1.exe` as an admin. It:
 
 - installs to `C:\Program Files\AltAccounts`;
 - adds **one** machine-wide autostart entry (`HKLM\...\Run\AltAccounts`), so the app starts in **every** account at sign-in;
@@ -43,9 +43,9 @@ dotnet publish src\AltAccounts.App -c Release -r win-x64 --self-contained -p:Pub
 **With winget.** winget downloads the installer from a URL, so upload the setup file first (for example to a GitHub release). Then run:
 
 ```powershell
-./build.ps1 -Installer -InstallerUrl https://github.com/OpiKula2877/AltWin/releases/download/v1.0.0/AltWin-Setup-1.0.0.exe
+./build.ps1 -Installer -InstallerUrl https://github.com/OpiKula2877/AltWin/releases/download/v1.0.1/AltWin-Setup-1.0.1.exe
 winget settings --enable LocalManifestFiles     # once, from an admin terminal
-winget install --manifest winget\manifests\o\OpiKula2877\AltWin\1.0.0
+winget install --manifest winget\manifests\o\OpiKula2877\AltWin\1.0.1
 ```
 
 **Without installing.** You can run `artifacts\publish\AltAccounts.exe` directly to try it. It won't start with Windows, and the shared settings folder is created the first time an admin saves something in Settings.
@@ -101,7 +101,7 @@ No file ever contains a password or PIN.
 - **Daily time limits** are enforced by this app only, so a determined user can close it. **Sign-in hours** use `net user /times`, which Windows enforces for new sign-ins. The app also locks a session that is still open outside the hours. Real parental controls need Microsoft Family Safety, which usually needs Microsoft accounts.
 - NTFS quotas count every file the account *owns* on the drive, not exactly "profile + shared folders".
 - Windows does not reveal current passwords or PINs.
-- While running in the tray the app uses about 80 MB of private memory.
+- While running in the tray the app uses about 80 MB of private memory (version 1.0.1 and later; 1.0.0 used about twice that because of single-file compression).
 
 ## Uninstall
 

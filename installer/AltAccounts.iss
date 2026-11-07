@@ -3,7 +3,7 @@
 ; and on uninstall removes that value, every app-created folder permission and every AltAccounts_* HKCU Run value.
 
 #ifndef AppVersion
-  #define AppVersion "1.0.0"
+  #define AppVersion "1.0.1"
 #endif
 
 [Setup]
